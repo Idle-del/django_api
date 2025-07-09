@@ -12,6 +12,7 @@ from django.http import Http404
 from rest_framework import mixins, generics, viewsets
 from django.shortcuts import get_object_or_404
 from employees.filters import EmployeeFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 @api_view(['GET', 'POST'])
 def studentsView(request):
@@ -166,6 +167,10 @@ class EmployeeViewSet(viewsets.ModelViewSet):
 class BlogsView(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    filter_backends = [SearchFilter,OrderingFilter]
+    search_fields = ['blog_title', 'blog_text'] # Returns the blogs that match the search query in either blog_title or blog_text
+    # search_fields = ['^blog_title'] # Returns the blogs that start with the search query in blog_title
+    ordering_fields = ['id']
 
 class CommentsView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
